@@ -20,23 +20,27 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Gemini","version":"8.6.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
-<meta property="og:type" content="website">
-<meta property="og:title" content="记笔记">
-<meta property="og:url" content="http://example.com/index.html">
+<meta name="description" content="配置TLS和身份验证123456&#x2F;usr&#x2F;share&#x2F;elasticsearch&#x2F;bin&#x2F;elasticsearch-certutil ca&#x2F;usr&#x2F;share&#x2F;elasticsearch&#x2F;bin&#x2F;elasticsearch-certutil cert --ca elastic-stack-ca.p12#添加elasticsearch组权限chgrp elasticsearch &#x2F;etc&#x2F;elas">
+<meta property="og:type" content="article">
+<meta property="og:title" content="es启用xpack">
+<meta property="og:url" content="http://example.com/2021/07/20/es_auth/index.html">
 <meta property="og:site_name" content="记笔记">
+<meta property="og:description" content="配置TLS和身份验证123456&#x2F;usr&#x2F;share&#x2F;elasticsearch&#x2F;bin&#x2F;elasticsearch-certutil ca&#x2F;usr&#x2F;share&#x2F;elasticsearch&#x2F;bin&#x2F;elasticsearch-certutil cert --ca elastic-stack-ca.p12#添加elasticsearch组权限chgrp elasticsearch &#x2F;etc&#x2F;elas">
 <meta property="og:locale">
+<meta property="article:published_time" content="2021-07-20T16:45:47.577Z">
+<meta property="article:modified_time" content="2021-07-20T16:45:47.577Z">
 <meta property="article:author" content="拙言">
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="http://example.com/">
+<link rel="canonical" href="http://example.com/2021/07/20/es_auth/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":true,"isPost":false,"lang":"zh","comments":"","permalink":"","path":"index.html","title":""}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh","comments":true,"permalink":"http://example.com/2021/07/20/es_auth/","path":"2021/07/20/es_auth/","title":"es启用xpack"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>记笔记</title>
+<title>es启用xpack | 记笔记</title>
   
 
 
@@ -105,7 +109,7 @@
 
   <aside class="sidebar">
 
-    <div class="sidebar-inner sidebar-overview-active">
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
       <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
           Table of Contents
@@ -118,6 +122,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AETLS%E5%92%8C%E8%BA%AB%E4%BB%BD%E9%AA%8C%E8%AF%81"><span class="nav-number">1.</span> <span class="nav-text">配置TLS和身份验证</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#elasticserch-%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="nav-number">2.</span> <span class="nav-text">elasticserch 配置文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%87%8D%E5%90%AFelasticsearch-%E6%9C%8D%E5%8A%A1"><span class="nav-number">3.</span> <span class="nav-text">重启elasticsearch 服务</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E8%BA%AB%E4%BB%BD%E9%AA%8C%E8%AF%81"><span class="nav-number">4.</span> <span class="nav-text">配置身份验证</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Kibana-%E9%85%8D%E7%BD%AE"><span class="nav-number">5.</span> <span class="nav-text">Kibana 配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Logstash-%E9%85%8D%E7%BD%AE"><span class="nav-number">6.</span> <span class="nav-text">Logstash 配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AEhead%E6%8F%92%E4%BB%B6"><span class="nav-number">7.</span> <span class="nav-text">配置head插件</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -162,88 +167,17 @@
 </noscript>
 
 
-    <div class="main-inner index posts-expand">
+    <div class="main-inner post posts-expand">
 
-    
+
+  
 
 
 <div class="post-block">
   
   
 
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/20/apiserver_add_ip/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="拙言">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="记笔记">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/07/20/apiserver_add_ip/" class="post-title-link" itemprop="url">Apiserver 增加IP</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2021-07-20 16:45:47" itemprop="dateCreated datePublished" datetime="2021-07-20T16:45:47+00:00">2021-07-20</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="生成kubeadm配置"><a href="#生成kubeadm配置" class="headerlink" title="生成kubeadm配置"></a>生成kubeadm配置</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># kubectl -n kube-system get configmap kubeadm-config -o jsonpath=&#x27;&#123;.data.ClusterConfiguration&#125;&#x27; &gt; kubeadm.yaml</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="修改kubeadm配置"><a href="#修改kubeadm配置" class="headerlink" title="修改kubeadm配置"></a>修改kubeadm配置</h1><p>在certSANs中增加IP</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">..</span></span><br><span class="line"><span class="attr">apiServer:</span></span><br><span class="line">  <span class="attr">certSANs:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">kubernetes</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">kubernetes.default</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">kubernetes.default.svc</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">kubernetes.default.svc.cluster.local</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">localhost</span></span><br><span class="line">  <span class="bullet">-</span> <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">lb.kubesphere.local</span></span><br><span class="line">  <span class="bullet">-</span> <span class="number">192.168</span><span class="number">.3</span><span class="number">.30</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">devops</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">devops.cluster.local</span></span><br><span class="line">  <span class="bullet">-</span> <span class="number">10.233</span><span class="number">.0</span><span class="number">.1</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">m.k8s.local</span></span><br><span class="line">  <span class="string">...</span></span><br></pre></td></tr></table></figure>
-
-
-
-<h1 id="备份并生成证书"><a href="#备份并生成证书" class="headerlink" title="备份并生成证书"></a>备份并生成证书</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># mv /etc/kubernetes/pki/apiserver.&#123;crt,key&#125; ~/cert_bak</span><br><span class="line"># kubeadm init phase certs apiserver --config kubeadm.yaml </span><br></pre></td></tr></table></figure>
-
-<h1 id="验证"><a href="#验证" class="headerlink" title="验证"></a>验证</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># openssl x509 -in /etc/kubernetes/pki/apiserver.crt -text</span><br><span class="line">...</span><br><span class="line"> X509v3 Subject Alternative Name: </span><br><span class="line">                DNS:devops, DNS:kubernetes, DNS:kubernetes.default, DNS:kubernetes.default.svc, DNS:kubernetes.default.svc.cluster.local, DNS:lb.kubesphere.local, DNS:kubernetes, DNS:kubernetes.default, DNS:kubernetes.default.svc, DNS:kubernetes.default.svc.cluster.local, DNS:localhost, DNS:lb.kubesphere.local, DNS:devops, DNS:devops.cluster.local, DNS:m.k8s.local, IP Address:10.233.0.1, IP Address:192.168.3.30, IP Address:127.0.0.1, IP Address:192.168.3.30, IP Address:10.233.0.1</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh">
     <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/20/es_auth/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -256,9 +190,9 @@
       <meta itemprop="name" content="记笔记">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/07/20/es_auth/" class="post-title-link" itemprop="url">es启用xpack</a>
-        </h2>
+        <h1 class="post-title" itemprop="name headline">
+          es启用xpack
+        </h1>
 
         <div class="post-meta-container">
           <div class="post-meta">
@@ -281,7 +215,7 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h2 id="配置TLS和身份验证"><a href="#配置TLS和身份验证" class="headerlink" title="配置TLS和身份验证"></a>配置TLS和身份验证</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">/usr/share/elasticsearch/bin/elasticsearch-certutil ca</span><br><span class="line">/usr/share/elasticsearch/bin/elasticsearch-certutil cert --ca elastic-stack-ca.p12</span><br><span class="line"><span class="meta">#</span><span class="bash">添加elasticsearch组权限</span></span><br><span class="line">chgrp elasticsearch /etc/elasticsearch/elastic-certificates.p12 /etc/elasticsearch/elastic-stack-ca.p12</span><br><span class="line"><span class="meta">#</span><span class="bash">修改文件权限640</span></span><br><span class="line">chmod 640 /etc/elasticsearch/elastic-certificates.p12 /etc/elasticsearch/elastic-stack-ca.p12 </span><br></pre></td></tr></table></figure>
+        <h2 id="配置TLS和身份验证"><a href="#配置TLS和身份验证" class="headerlink" title="配置TLS和身份验证"></a>配置TLS和身份验证</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">/usr/share/elasticsearch/bin/elasticsearch-certutil ca</span><br><span class="line">/usr/share/elasticsearch/bin/elasticsearch-certutil cert --ca elastic-stack-ca.p12</span><br><span class="line"><span class="meta">#</span><span class="bash">添加elasticsearch组权限</span></span><br><span class="line">chgrp elasticsearch /etc/elasticsearch/elastic-certificates.p12 /etc/elasticsearch/elastic-stack-ca.p12</span><br><span class="line"><span class="meta">#</span><span class="bash">修改文件权限640</span></span><br><span class="line">chmod 640 /etc/elasticsearch/elastic-certificates.p12 /etc/elasticsearch/elastic-stack-ca.p12 </span><br></pre></td></tr></table></figure>
 
 <h2 id="elasticserch-配置文件"><a href="#elasticserch-配置文件" class="headerlink" title="elasticserch 配置文件"></a>elasticserch 配置文件</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">xpack.security.enabled: true</span><br><span class="line">xpack.security.transport.ssl.enabled: true</span><br><span class="line">xpack.security.transport.ssl.verification_mode: certificate</span><br><span class="line">xpack.security.transport.ssl.keystore.path: /etc/elasticsearch/elastic-certificates.p12</span><br><span class="line">xpack.security.transport.ssl.truststore.path: /etc/elasticsearch/elastic-certificates.p12</span><br></pre></td></tr></table></figure>
 
@@ -336,7 +270,6 @@
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//192.168.99.185/elasticsearch-head//?auth_user=elastic&amp;auth_password=qZXo7EkxoxmKvDqQIwn5</span></span><br></pre></td></tr></table></figure>
 
 
-      
     </div>
 
     
@@ -344,11 +277,22 @@
     
 
     <footer class="post-footer">
-        <div class="post-eof"></div>
-      
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+            </div>
+            <div class="post-nav-item">
+                <a href="/2021/07/20/apiserver_add_ip/" rel="next" title="Apiserver 增加IP">
+                  Apiserver 增加IP <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
     </footer>
   </article>
 </div>
+
 
 
 
